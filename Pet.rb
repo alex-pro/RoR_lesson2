@@ -5,57 +5,115 @@ class Pet
     @type = type
     @health = 100 #жизнь
     @mood = 100 #настроение
-    @hunger = 0 #голод
-    @dream = 100 #сон
+    @satiety = 100 #сытость
+    @cheerfulness = 100 #бодрость
     @cleaness = 100 #чистота
-    @poo = 0 #нуджа
+    @poo = 0 #нужда
+
+    @actions = ["бегает и все крушит",
+                "сьел вашу новую рыбку",
+                "привторяеться, что умеет читать",
+                "грустит и смотрит в окно",
+                "дико смееться, глядя на Вас",
+                "рисует себя",
+                "пытаеться допрыгнуть до потолка",
+                "обдирает обои",
+                "что-то ищет в мусорном ведре",
+                "побежал на улицу",
+                "смотрит на Вас вызывающее",
+                "просит Вас поиграть с ним"]
+
+    @results = ["устает, но его настроение повышаеться",
+                "поел и теперь не голоден. Правда нужда повысилась",
+                "умственно вымотался и теперь хочет спать",
+                "очень ванильный #{type_list[@type]}",
+                "намекает, что Вам стоит посмотреть в зеркало",
+                "рисует весьма неплохо. Настроение повысилось",
+                "вылез на стул, чтобы достать и падает. Жизнь и настроение уменшились",
+                "хочет, чтобы его наказали",
+                "немного поел, но жизнь и опрятность уменшилась, а нужда повысилась",
+                "нашел там свою старую игрушку. Настроение повысилось, но немного устал",
+                "выглядит устрашающее",
+                "получает травму, когда вы, играя с ним, случайно задели его правой ногой"]
   end
 
   def treat
-    puts "Вы сводили #{@name}a(у) к доктору"
-    @health = 100
-    @time = 3
+    puts "Вы сводили #{@name} к доктору"
+    @health = 115
+    @time = 15
     change_status(@time)
   end
 
   def watch
     puts "#{@name} смотрит телевизор"
-    @mood = 100
-    @time = 2
+    @mood = 110
+    @time = 10
     change_status(@time)
   end
 
   def feed
-    puts "Вы покормили #{@name}a(у)"
-    @hunger = 0
-    @time = 1
+    puts "Вы покормили #{@name}"
+    @satiety = 105
+    @time = 5
     change_status(@time)
   end
 
   def sleep
-    puts "Вы уложили #{@name}a(у) спать"
-    @dream = 100
-    @time = 3
+    puts "Вы уложили #{@name} спать"
+    @cheerfulness = 115
+    @time = 15
     change_status(@time)
   end
 
   def wash
-    puts "Вы отправили #{@name}a(у) в ванную"
-    @cleaness = 100
-    @time = 2
+    puts "Вы отправили #{@name} в ванную"
+    @cleaness = 110
+    @time = 10
     change_status(@time)
   end
 
   def toilet
-    puts "Вы сводили #{@name}a(у) в туалет"
-    @poo = 0
-    @time = 1
+    puts "Вы сводили #{@name} в туалет"
+    @poo = -5
+    @time = 5
     change_status(@time)
   end
 
   def wait
-    puts "Вы смотрите за #{@name}ом(ой)"
-    @time = 1
+    puts "Вы смотрите за #{@name}"
+
+    action_index = rand(@actions.length)
+    action = @actions[action_index]
+    result = @results[action_index]
+    puts "#{@name} #{action}! #{@name} #{result}"
+
+    case action_index
+    when 0
+      @mood += 10
+      @cheerfulness -= 5
+    when 1
+      @satiety += 15
+      @poo += 10
+    when 2
+      @cheerfulness -= 15
+    when 5
+      @mood += 5
+    when 6
+      @health -= 10
+      @mood -= 10
+    when 8
+      @satiety += 5
+      @health -= 10
+      @cleaness -= 10
+      @poo += 5
+    when 9
+      @mood += 15
+      @cheerfulness -= 5
+    when 11
+      @health -= 15
+    end
+
+    @time = 3
     change_status(@time)
   end
 
@@ -63,8 +121,8 @@ class Pet
     puts "-------Статус питомца-------"
     puts "Жизнь питомца = #{@health}"
     puts "Настроение питомца = #{@mood}"
-    puts "Голод питомца = #{@hunger}"
-    puts "Сонливость питомца = #{@dream}"
+    puts "Сытость питомца = #{@satiety}"
+    puts "Бодрость питомца = #{@cheerfulness}"
     puts "Опрятность питомца = #{@cleaness}"
     puts "Нужда питомца = #{@poo}"
     puts "----------------------------"
@@ -75,19 +133,20 @@ class Pet
     puts "Treat  - сводить к доктору (повышение жизни)       Длительность: 30 минут"
     puts "Watch  - смотеть телевизор (повышение настроения)  Длительность: 20 минут"
     puts "Feed   - покормить         (повышение сытости)     Длительность: 10 минут"
-    puts "Sleep  - уложить спать     (понижение сонливости)  Длительность: 30 минут"
+    puts "Sleep  - уложить спать     (повышение бодрости)    Длительность: 30 минут"
     puts "Wash   - помыть            (повышение опрятности)  Длительность: 20 минут"
     puts "Toilet - сводить в туалет  (понижение нужды)       Длительность: 10 минут"
     puts "Wait   - понаблюдать       (случайное событие)     Длительность: 10 минут"
     puts "Status - состояние питомца (без событий)           Длительность: 0  минут"
     puts "Help   - все действия      (без событий)           Длительность: 0  минут"
+    puts "Exit   - выход из игры                                                   "
     puts "-------------------------------------------------------------------------"
   end
 
   private
 
   def hungry?
-    @hunger >= 80
+    @satiety <= 20
   end
 
   def poopy?
@@ -99,7 +158,7 @@ class Pet
   end
 
   def sleepy?
-    @dream <= 20
+    @cheerfulness <= 20
   end
 
   def healthy?
@@ -113,15 +172,15 @@ class Pet
   def change_status(time)
     @health = @health < 0 ? 0 : @health > 100 ? 100 : @health - time
     @mood = @mood < 0 ? 0 : @mood > 100 ? 100 : @mood - time
-    @hunger = @hunger < 0 ? 0 : @hunger > 100 ? 100 : @hunger + time
-    @dream = @dream < 0 ? 0 : @dream > 100 ? 100 : @dream - time
+    @satiety = @satiety < 0 ? 0 : @satiety > 100 ? 100 : @satiety - time
+    @cheerfulness = @cheerfulness < 0 ? 0 : @cheerfulness > 100 ? 100 : @cheerfulness - time
     @cleaness = @cleaness < 0 ? 0 : @cleaness > 100 ? 100 : @cleaness - time
     @poo = @poo < 0 ? 0 : @poo > 100 ? 100 : @poo + time
 
-    puts "#{@name} хочет есть!  (#{@hunger}%)" if hungry?
+    puts "#{@name} хочет есть!  (#{@satiety}%)" if hungry?
     puts "#{@name} хочет в туалет!  (#{@poo}%)" if poopy?
     puts "#{@name} скучает.  (#{@mood}%)" if bored?
-    puts "#{@name} хочет спать.  (#{@dream}%)" if sleepy?
+    puts "#{@name} хочет спать.  (#{@cheerfulness}%)" if sleepy?
     puts "#{@name} плохо себя чуствует!  (#{@health}%)" if healthy?
     puts "#{@name} воняет!  (#{@cleaness}%)" if clean?
 
@@ -131,20 +190,29 @@ class Pet
       exit
     end
 
-    if @hunger >= 100
-      puts "У вашего питомца слюнки текут при виде Вас. Вы пытались убежать, но он оказался быстрее и сьел Вас"
-      puts "Игра окончена"
-      exit
+    if @satiety <= 0
+      random = rand(1)
+      if random == 1
+        puts "У вашего питомца слюнки текут при виде Вас. Вы пытались убежать, но он оказался быстрее и сьел Вас"
+        puts "Игра окончена"
+        exit
+      else
+        puts "Ваш питомец ненавидит Вас. Он оставил записку и убежал"
+        puts "Игра окончена"
+        exit
+      end
     end
 
     if @poo >= 100
-      puts "Ой. #{@name} не вытерпел и обосрался на месте"
+      puts "Ой. #{@name} не вытерпел и обделался на месте\nОпрятность понизилась"
       @poo = 0
+      @cleaness -= 30
     end
 
-    if @dream <= 0
-      puts "#{@name} свалился с ног и уснул. \nХррр..."
-      @dream = 100
+    if @cheerfulness <= 0
+      puts "#{@name} свалился с ног и уснул. \nХррр...\nЖизнь питомца уменшилась"
+      @cheerfulness = 100
+      @health -= 30
     end
   end
 end
@@ -162,6 +230,7 @@ end
 
 def command_list
   command_list = Hash.new
+  command_list[0] = "Exit"
   command_list[1] = "Treat"
   command_list[2] = "Watch"
   command_list[3] = "Feed"
@@ -174,7 +243,7 @@ def command_list
   command_list
 end
 
-puts "Добро пожаловать в Тамагочи 1.0"
+puts "Добро пожаловать в тамагочи 1.0"
 (type_list.length).times { |t| puts "#{t+1} - #{type_list[t+1]}" }
 
 while 1
@@ -191,13 +260,15 @@ system "clear"
 
 puts "Создан(а) #{type_list[type]} с именем #{name}."
 
-(command_list.length).times { |t| puts "#{t+1} - #{command_list[t+1]}" }
+(command_list.length).times { |t| puts "#{t} - #{command_list[t]}" }
 
 while 1
-  puts "\nЧто делаем?"
+  puts "Что делаем?"
   command = gets.chomp.to_i
   if command_list.keys.include?(command)
     command = command_list[command].downcase
     pet.send command
+  elsif command == 0
+    exit
   end
 end
